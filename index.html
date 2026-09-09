@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>EchoBuddy</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="keywords" content="EchoBuddy Buddy AI, English practice AI"
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --paper:#F6F3EE;
+            --paper-2:#FBF9F5;
+            --ink:#22262B;
+            --ink-soft:#5B6167;
+            --ink-faint:#9A9A8E;
+            --line:#DDD6C8;
+            --denim:#B57C3B;
+            --denim-dark:#AA7237;
+            --sage:#7C8A6E;
+            --white:#FFFFFF;
+            --radius-md:14px;
+            --font-display:'Fraunces', Georgia, serif;
+            --font-body:'Inter', -apple-system, sans-serif;
+            --font-mono:'IBM Plex Mono', monospace;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100vh; width: 100vw; overflow: hidden; font-family: var(--font-body); background: var(--paper); color: var(--ink); }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            height: 100vh;
+            width: 100vw;
+            background-color: var(--paper);
+            overflow: hidden;
+        }
+
+        /* Sidebar Left */
+        .sidebar {
+            background-color: var(--white);
+            border-right: 1px solid var(--line);
+            padding: 24px;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .sidebar h2 { font-family: var(--font-display); margin-bottom: 8px; }
+        .sidebar p { font-size: 13px; color: var(--ink-soft); margin-bottom: 24px; }
+        .sidebar ul { list-style: none; }
+        .sidebar li { margin-bottom: 12px; }
+        .sidebar a { text-decoration: none; color: var(--ink); font-weight: 500; }
+
+        /* Chat Middle Area */
+        .chat-ai {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: var(--paper-2);
+            position: relative;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--line);
+            background: var(--paper-2);
+            z-index: 10;
+        }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .seal {
+            width: 34px; height: 34px; border-radius: 50%; background: var(--denim);
+            color: var(--white); display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-display); font-weight: 600;
+        }
+        .header-title { font-family: var(--font-display); font-size: 17px; font-weight: 500; }
+        .header-status { font-family: var(--font-mono); font-size: 11px; color: var(--sage); display: flex; align-items: center; gap: 6px; }
+        .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--sage); }
+
+        .call-btn {
+            width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--line);
+            background: transparent; color: var(--ink-soft); display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.2s;
+        }
+        .call-btn:hover { border-color: var(--denim); color: var(--denim); }
+
+        /* Thread Scroll Area */
+        .thread {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .msg-row { display: flex; width: 100%; }
+        .msg-row.user { justify-content: flex-end; }
+        .msg-row.assistant { justify-content: flex-start; }
+
+        .bubble-user {
+            max-width: 70%; background: var(--denim); color: var(--white);
+            padding: 12px 16px; border-radius: 16px 16px 4px 16px; font-size: 14.5px;
+        }
+        .bubble-user .meta { font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,0.7); margin-top: 4px; text-align: right; }
+
+        .letter { max-width: 80%; border-left: 2px solid var(--sage); padding-left: 14px; }
+        .letter-sender { font-family: var(--font-display); font-style: italic; color: var(--sage); font-size: 14px; }
+        .letter-time { font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); margin-left: 6px; }
+        .letter-body { font-size: 15px; margin-top: 4px; line-height: 1.5; }
+
+        /* Composer Input Box */
+        .composer { padding: 16px 24px; border-top: 1px solid var(--line); background: var(--paper-2); }
+        .composer-field {
+            display: flex; align-items: center; gap: 10px; background: var(--white);
+            border: 1px solid var(--line); border-radius: var(--radius-md); padding: 8px 12px;
+        }
+        .composer-field textarea {
+            flex: 1; border: none; outline: none; resize: none; font-family: var(--font-body);
+            font-size: 14.5px; background: transparent; max-height: 100px;
+        }
+        .send-btn {
+            width: 36px; height: 36px; border-radius: 50%; background: var(--denim);
+            border: none; color: var(--white); display: flex; align-items: center; justify-content: center;
+            cursor: pointer; flex-shrink: 0;
+        }
+        .send-btn:hover { background: var(--denim-dark); }
+
+        /* Call Screen View Overlay */
+        .call-screen {
+            display: none; position: fixed; inset: 0; z-index: 9999;
+            flex-direction: column; align-items: center; justify-content: space-between;
+            background: var(--paper); padding: 48px 24px;
+        }
+        .call-screen.visible { display: flex !important; }
+        .call-center { text-align: center; }
+        .call-status-text { color: var(--sage); font-size: 12px; margin-top: 4px; }
+        .call-caption { font-size: 13px; color: var(--ink-faint); }
+        .call-actions { display: flex; gap: 20px; }
+        .call-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--denim); color: white; display: flex; align-items: center; justify-content: center; font-size: 32px; font-family: var(--font-display); margin: 0 auto 12px; }
+        .speak-btn { width: 72px; height: 72px; border-radius: 50%; border: none; background: var(--denim); color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; }
+        .hangup-btn { width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--line); color: #B23B3B; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+
+        /* Lessons Right Panel */
+        .lessons-panel {
+            background-color: var(--paper); padding: 24px; display: flex;
+            flex-direction: column; gap: 20px; height: 100%; overflow-y: auto;
+            border-left: 1px solid var(--line);
+        }
+        .card { background-color: var(--white); border-radius: 14px; padding: 20px; border: 1px solid var(--line); }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <aside class="sidebar">
+        <h2>EchoBuddy</h2>
+        <p>your AI English Buddy ready to stay with you</p>
+        <nav>
+            <ul>
+                <li><a href="#index.html">• Coach</a></li>
+                <li><a href="page2.html">• Insights</a></li>
+                <li><a href="tasks.html">• Tasks</a></li>
+                <li><a href="profile.html">• Profile</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="chat-ai">
+        <div class="header">
+            <div class="header-left">
+                <div class="seal">B</div>
+                <div>
+                    <div class="header-title">BUDDY</div>
+                    <div class="header-status"><span class="status-dot"></span><span>online</span></div>
+                </div>
+            </div>
+            <button class="call-btn" id="callBtn" title="Call Buddy">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            </button>
+        </div>
+
+        <div class="thread" id="thread">
+            <div class="msg-row assistant">
+                <div class="letter">
+                    <div class="letter-sender">BUDDY <span class="letter-time">9:41 AM</span></div>
+                    <div class="letter-body">Good morning! What can I help you practice today?</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="composer">
+            <div class="composer-field">
+                <textarea id="input" placeholder="Type your message..." rows="1"></textarea>
+                <button class="send-btn" id="sendBtn" title="Send message" aria-label="Send message">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="call-screen" id="callScreen">
+            <div class="call-center">
+                <div class="call-avatar">B</div>
+                <h2>BUDDY</h2>
+                <p class="call-status-text">● On Call</p>
+            </div>
+            <p id="callCaption" class="call-caption">Press mic button to start speaking</p>
+            <div class="call-actions">
+                <button class="speak-btn" id="speakBtn"> 🕻 </button>
+                <button class="hangup-btn" id="hangupBtn">✕</button>
+            </div>
+        </div>
+    </main>
+
+    <aside class="lessons-panel">
+        <div class="card" id="grammarCard">
+            <h3>Grammar Check</h3>
+            <p class="panel-note">Your grammar tips will appear here.</p>
+        </div>
+        <div class="card" id="vocabCard">
+            <h3>Vocabulary</h3>
+            <p class="panel-note">Word of the chat will show here.</p>
+        </div>
+    </aside>
+</div>
+
+<script>
+    const thread = document.getElementById('thread');
+    const input = document.getElementById('input');
+    const sendBtn = document.getElementById('sendBtn');
+    const callBtn = document.getElementById('callBtn');
+    const callScreen = document.getElementById('callScreen');
+    const hangupBtn = document.getElementById('hangupBtn');
+
+    function getTime() {
+        return new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }
+
+    function scrollToBottom() {
+        thread.scrollTop = thread.scrollHeight;
+    }
+
+    function appendUserBubble(text) {
+        const userRow = document.createElement('div');
+        userRow.className = 'msg-row user';
+        userRow.innerHTML = `
+            <div class="bubble-user">
+                ${text}
+                <div class="meta">${getTime()}</div>
+            </div>`;
+        thread.appendChild(userRow);
+        scrollToBottom();
+    }
+
+    function appendAIBubble(text) {
+        const aiRow = document.createElement('div');
+        aiRow.className = 'msg-row assistant';
+        aiRow.innerHTML = `
+            <div class="letter">
+                <div class="letter-sender">BUDDY <span class="letter-time">${getTime()}</span></div>
+                <div class="letter-body">${text}</div>
+            </div>`;
+        thread.appendChild(aiRow);
+        scrollToBottom();
+    }
+
+    // ✨ ฟังก์ชันส่งข้อความ (แก้ไขโค้ดซ้อนแล้ว)
+    async function sendMessage() {
+        const userText = input.value.trim();
+        if (!userText) return;
+
+        appendUserBubble(userText);
+        input.value = '';
+
+        try {
+            // ยิงไปหา bot.py (เช็คพอร์ต)
+            const response = await fetch('http://127.0.0.1:8001/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user_message: userText })
+            });
+
+            if (!response.ok) throw new Error('Backend server error');
+            
+            // 2. แปลงข้อความตอบกลับจาก Backend เป็น JSON Object
+            const data = await response.json();
+
+            // 3. ส่งข้อมูลทั้งก้อนไปอัปเดตหน้าเว็บและการ์ดข้างๆ
+            handleAIResponse(data);
+
+            // 4. ส่งเฉพาะข้อความพูดคุยไปเล่นเสียงอ่าน (TTS)
+            if (data.reply) {
+                playAIVoice(data.reply);
+            }
+
+        } catch (error) {
+            console.error('Error connecting to backend:', error);
+            appendAIBubble("Cannot connect to Python backend! Make sure bot.py is running.");
+        }
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    callBtn.addEventListener('click', () => callScreen.classList.add('visible'));
+    hangupBtn.addEventListener('click', () => callScreen.classList.remove('visible'));
+
+    // ✨ ไมโครโฟน 
+    const speakBtn = document.getElementById('speakBtn');
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US'; // กำหนดให้เป็นภาษาอังกฤษ
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        speakBtn.addEventListener('click', () => {
+            recognition.start();
+            speakBtn.innerText = '🟢';
+        });
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            input.value = transcript;
+            sendMessage();
+        };
+
+        recognition.onend = () => {
+            speakBtn.innerText = ' 🕻 ';
+        };
+
+        recognition.onerror = (event) => {
+            speakBtn.innerText = ' 🕻 ';
+            console.error("Speech Error:", event.error);
+        };
+    }
+
+    // ✨ จัดการ Response จาก backend ที่ส่งมาเป็น object JSON หรือ text
+    function handleAIResponse(responseData) {
+        let chatReply = "";
+        let grammarTip = "NONE";
+        let vocabList = "NONE";
+
+        // กรณี Backend ส่งเป็น JSON Object
+        if (typeof responseData === 'object') {
+            chatReply = responseData.reply || "";
+            
+            // แปลงข้อความ Grammar Errors จาก Array เป็นข้อความอ่านง่าย
+            if (responseData.errors && responseData.errors.length > 0) {
+                grammarTip = responseData.errors.map(e => 
+                    `❌ ${e.user_said}<br>👉 ${e.correct}<br>💡 ${e.explanation}`
+                ).join('<br><br>');
+            }
+
+            // แปลงข้อความ Vocabularies จาก Array เป็นข้อความอ่านง่าย
+            if (responseData.vocabularies && responseData.vocabularies.length > 0) {
+                vocabList = responseData.vocabularies.map(v => 
+                    `• <strong>${v.word}</strong>: ${v.meaning}`
+                ).join('<br>');
+            }
+        } else {
+            // สำรองกรณีหลุดมาเป็นข้อความธรรมดา
+            chatReply = responseData;
+        }
+
+        // 1. แสดงข้อความคุยเฉพาะส่วนของ AI
+        appendAIBubble(chatReply);
+
+        // 2. อัปเดตการ์ด Grammar Check
+        const grammarCard = document.getElementById('grammarCard');
+        if (grammarCard) {
+            if (grammarTip !== 'NONE') {
+                grammarCard.innerHTML = `
+                    <h3>Grammar Check</h3>
+                    <div style="background-color: #FFF3CD; color: #856404; padding: 10px; border-radius: 8px; margin-top: 8px; font-size: 13px;">
+                        ${grammarTip}
+                    </div>`;
+            } else {
+                grammarCard.innerHTML = `
+                    <h3>Grammar Check</h3>
+                    <p style="font-size:13px; color:#7C8A6E; margin-top:8px;">✅ Great grammar! Keep it up.</p>`;
+            }
+        }
+
+        // 3. อัปเดตการ์ด Vocabulary
+        const vocabCard = document.getElementById('vocabCard');
+        if (vocabCard) {
+            if (vocabList !== 'NONE') {
+                vocabCard.innerHTML = `
+                    <h3>Vocabulary</h3>
+                    <div style="background-color: #E8F4F8; color: #1D6F8A; padding: 10px; border-radius: 8px; margin-top: 8px; font-size: 13px;">
+                        ${vocabList}
+                    </div>`;
+            } else {
+                vocabCard.innerHTML = `
+                    <h3>Vocabulary</h3>
+                    <p style="font-size:13px; color:#5B6167; margin-top:8px;">No new keywords for this turn.</p>`;
+            }
+        }
+    }
+
+    // ✨ เล่นเสียง AI TTS (ส่งเฉพาะข้อความคุย ไม่ส่ง JSON)
+    async function playAIVoice(textToRead) {
+        try {
+            const response = await fetch('http://127.0.0.1:8001/api/tts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: textToRead })
+            });
+
+            if (response.ok) {
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
+                audio.play();
+            }
+        } catch (err) {
+            console.error("Audio playback error:", err);
+        }
+    }
+</script>
+
+</body>
+</html>
