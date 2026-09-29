@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <title>EchoBuddy</title>
+    <title>EchoBuddy-insights</title>
 
     <style>
       :root{
@@ -688,7 +688,6 @@
 
     async function loadInsightsData() {
         try {
-            // เรียกยิง API ไปที่พอร์ต 8000
             const response = await fetch('http://127.0.0.1:8000/api/insights');
             if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
@@ -699,7 +698,7 @@
                 const GOAL = 500;
                 const count = data.vocab_count;
 
-                countUp(vocabCountElem, count, 1100); // ใช้ตัวเลขจริงแทน 124
+                countUp(vocabCountElem, count, 1100); 
 
                 const percent = Math.min(100, Math.round((count / GOAL) * 100));
                 requestAnimationFrame(() => {
@@ -727,7 +726,7 @@
         }
     }
 
-    // เรียกฟังก์ชันเมื่อเปิดหน้าเว็บขึ้นมา
+    
     window.addEventListener('DOMContentLoaded', loadInsightsData);
   </script>
  
