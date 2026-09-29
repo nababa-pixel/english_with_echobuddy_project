@@ -15,10 +15,13 @@
             --ink-soft:#5B6167;
             --ink-faint:#9A9A8E;
             --line:#DDD6C8;
+            --line-soft:#EAE5D9;
             --denim:#B57C3B;
             --denim-dark:#AA7237;
+            --denim-wash:#F3E6D4;
             --sage:#7C8A6E;
             --white:#FFFFFF;
+            --radius-sm:8px;
             --radius-md:14px;
             --font-display:'Fraunces', Georgia, serif;
             --font-body:'Inter', -apple-system, sans-serif;
@@ -37,19 +40,95 @@
             overflow: hidden;
         }
 
-        /* Sidebar Left */
+        /* ---------- Sidebar Left---------- */
         .sidebar {
             background-color: var(--white);
             border-right: 1px solid var(--line);
             padding: 24px;
             height: 100%;
             overflow-y: auto;
+            background:var(--paper-2);
+            border-right:1px solid var(--line);
+            padding:26px 20px;
+            display:flex;
+            flex-direction:column;
         }
         .sidebar h2 { font-family: var(--font-display); margin-bottom: 8px; }
         .sidebar p { font-size: 13px; color: var(--ink-soft); margin-bottom: 24px; }
         .sidebar ul { list-style: none; }
         .sidebar li { margin-bottom: 12px; }
         .sidebar a { text-decoration: none; color: var(--ink); font-weight: 500; }
+    
+        .brand{ padding:0 4px 26px; }
+        .brand-name{
+            font-family:var(--font-display);
+            font-size:20px;
+            font-weight:600;
+            letter-spacing:-0.01em;
+        }
+        .brand-tag{
+            font-family:var(--font-mono);
+            font-size:10.5px;
+            color:var(--ink-faint);
+            margin-top:3px;
+            letter-spacing:0.01em;
+        }
+        
+        .nav{ display:flex; flex-direction:column; gap:4px; }
+        .nav-item{
+            display:flex;
+            align-items:center;
+            gap:11px;
+            padding:10px 12px;
+            border-radius:var(--radius-sm);
+            font-size:13.5px;
+            font-weight:500;
+            color:var(--ink-soft);
+            transition:background 0.15s, color 0.15s;
+        }
+        .nav-item svg{ flex-shrink:0; opacity:0.8; }
+        .nav-item:hover{ background:var(--line-soft); color:var(--ink); }
+        .nav-item.active{
+            background:var(--denim-wash);
+            color:var(--denim-dark);
+            font-weight:600;
+        }
+        .nav-item.active svg{ opacity:1; }
+        
+        .sidebar-spacer{ flex:1; }
+        
+        .practice-btn{
+            width:100%;
+            padding:13px;
+            border:none;
+            border-radius:var(--radius-sm);
+            background:var(--ink);
+            color:var(--paper-2);
+            font-size:13.5px;
+            font-weight:600;
+            cursor:pointer;
+            transition:background 0.15s;
+            margin-bottom:14px;
+        }
+        .practice-btn:hover{ background:#33383F; }
+        
+        .sidebar-foot{
+            display:flex;
+            flex-direction:column;
+            gap:2px;
+            border-top:1px solid var(--line);
+            padding-top:14px;
+        }
+        .sidebar-foot a{
+            display:flex; align-items:center; gap:10px;
+            padding:8px 12px;
+            font-size:13px;
+            color:var(--ink-faint);
+            border-radius:var(--radius-sm);
+        }
+        .sidebar-foot a:hover{ background:var(--line-soft); color:var(--ink-soft); }
+
+        
 
         /* Chat Middle Area */
         .chat-ai {
@@ -58,6 +137,25 @@
             height: 100vh;
             background: var(--paper-2);
             position: relative;
+        }
+
+        .typing-dots{
+            display:flex;
+            gap:4px;
+            padding:6px 0 2px;
+        }
+        .typing-dots span{
+            width:6px; height:6px;
+            background:var(--ink-faint, #9A9A8E);
+            border-radius:50%;
+            animation: typingBounce 1.2s infinite ease-in-out;
+        }
+        .typing-dots span:nth-child(2){ animation-delay:0.15s; }
+        .typing-dots span:nth-child(3){ animation-delay:0.3s; }
+
+        @keyframes typingBounce{
+            0%, 60%, 100% { transform: translateY(0); opacity:0.5; }
+            30% { transform: translateY(-4px); opacity:1; }
         }
 
         .header {
@@ -85,6 +183,26 @@
             cursor: pointer; transition: 0.2s;
         }
         .call-btn:hover { border-color: var(--denim); color: var(--denim); }
+
+        .voice-wave{
+            display:flex;
+            align-items:flex-end;
+            justify-content:center;
+            gap:4px;
+            height:36px;
+            margin:14px 0;
+        }
+        .voice-wave span{
+            width:4px;
+            height:6px;
+            background:var(--denim, #B57C3B);
+            border-radius:2px;
+            transition:height 0.08s ease;
+        }
+        .speak-btn.recording{
+            background:#B23B3B !important;
+            color:#fff !important;
+        }
 
         /* Thread Scroll Area */
         .thread {
@@ -157,14 +275,43 @@
     <aside class="sidebar">
         <h2>EchoBuddy</h2>
         <p>your AI English Buddy ready to stay with you</p>
-        <nav>
-            <ul>
-                <li><a href="#index.html">• Coach</a></li>
-                <li><a href="page2.html">• Insights</a></li>
-                <li><a href="tasks.html">• Tasks</a></li>
-                <li><a href="profile.html">• Profile</a></li>
-            </ul>
-        </nav>
+
+         <nav class="nav">
+                
+              <a class="nav-item active" href="index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                Coach
+              </a>
+              <a class="nav-item" href="page2.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>
+                Insights
+              </a>
+              <a class="nav-item" href="tasks.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                Tasks
+              </a>
+              <a class="nav-item" href="profile.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
+                Profile
+              </a>
+            </nav>
+
+
+            
+        
+            <div class="sidebar-spacer"></div>
+        
+            <button class="practice-btn" onclick="clearHistory()">New Chat</button>
+            <div class="sidebar-foot">
+              <a href="#help">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 2-3 4"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                Help
+              </a>
+              <a href="#logout">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                Log out
+              </a>
+            </div>
     </aside>
 
     <main class="chat-ai">
@@ -205,6 +352,9 @@
                 <h2>BUDDY</h2>
                 <p class="call-status-text">● On Call</p>
             </div>
+            <div class="voice-wave" id="voiceWave">
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
             <p id="callCaption" class="call-caption">Press mic button to start speaking</p>
             <div class="call-actions">
                 <button class="speak-btn" id="speakBtn"> 🕻 </button>
@@ -239,43 +389,100 @@
 
     function scrollToBottom() {
         thread.scrollTop = thread.scrollHeight;
+        
     }
+    const STORAGE_KEY = 'echobuddy_chat_history';
 
-    function appendUserBubble(text) {
+        function saveMessage(role, text, time) {
+            const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            history.push({ role, text, time });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+        }
+
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            if (history.length === 0) return false; // ไม่มีประวัติเก่า ให้ใช้ข้อความ welcome เดิม
+
+            thread.innerHTML = ''; // ล้างข้อความ welcome เริ่มต้นออกก่อน
+            history.forEach(msg => {
+                if (msg.role === 'user') {
+                    renderUserBubble(msg.text, msg.time);
+                } else {
+                    renderAIBubble(msg.text, msg.time);
+                }
+            });
+            scrollToBottom();
+            return true;
+        }
+
+    function renderUserBubble(text, time) {
         const userRow = document.createElement('div');
         userRow.className = 'msg-row user';
         userRow.innerHTML = `
             <div class="bubble-user">
                 ${text}
-                <div class="meta">${getTime()}</div>
+                <div class="meta">${time}</div>
             </div>`;
         thread.appendChild(userRow);
         scrollToBottom();
     }
 
-    function appendAIBubble(text) {
+    function appendUserBubble(text) {
+        const time = getTime();
+        renderUserBubble(text, time);
+        saveMessage('user', text, time);
+    }
+
+    function renderAIBubble(text, time) {
         const aiRow = document.createElement('div');
         aiRow.className = 'msg-row assistant';
         aiRow.innerHTML = `
             <div class="letter">
-                <div class="letter-sender">BUDDY <span class="letter-time">${getTime()}</span></div>
+                <div class="letter-sender">BUDDY <span class="letter-time">${time}</span></div>
                 <div class="letter-body">${text}</div>
             </div>`;
         thread.appendChild(aiRow);
         scrollToBottom();
     }
 
-    // ✨ ฟังก์ชันส่งข้อความ (แก้ไขโค้ดซ้อนแล้ว)
+    function appendAIBubble(text) {
+        const time = getTime();
+        renderAIBubble(text, time);
+        saveMessage('assistant', text, time);
+    }
+
+    function showTypingIndicator() {
+        const typingRow = document.createElement('div');
+        typingRow.className = 'msg-row assistant';
+        typingRow.id = 'typingIndicator';
+        typingRow.innerHTML = `
+            <div class="letter">
+                <div class="letter-sender">BUDDY <span class="letter-time">typing...</span></div>
+                <div class="typing-dots">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>`;
+        thread.appendChild(typingRow);
+        scrollToBottom();
+    }
+
+    function removeTypingIndicator() {
+        const typingRow = document.getElementById('typingIndicator');
+        if (typingRow) typingRow.remove();
+    }
+
+    // ฟังก์ชันส่งข้อความ 
     async function sendMessage() {
         const userText = input.value.trim();
         if (!userText) return;
 
         appendUserBubble(userText);
         input.value = '';
+        showTypingIndicator();
 
         try {
             // ยิงไปหา bot.py (เช็คพอร์ต)
-            const response = await fetch('http://127.0.0.1:8001/api/chat', {
+            const response = await fetch('http://127.0.0.1:8000/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ user_message: userText })
@@ -287,18 +494,23 @@
             const data = await response.json();
 
             // 3. ส่งข้อมูลทั้งก้อนไปอัปเดตหน้าเว็บและการ์ดข้างๆ
+            removeTypingIndicator(); 
             handleAIResponse(data);
 
             // 4. ส่งเฉพาะข้อความพูดคุยไปเล่นเสียงอ่าน (TTS)
             if (data.reply) {
-                playAIVoice(data.reply);
+                // ใช้วิธีเรียกแบบไม่ต้อง await เพื่อให้แชตแสดงผลค้างไว้ได้อย่างปลอดภัย
+                playAIVoice(data.reply).catch(err => console.error("TTS failed:", err));
             }
 
         } catch (error) {
+            removeTypingIndicator();
             console.error('Error connecting to backend:', error);
             appendAIBubble("Cannot connect to Python backend! Make sure bot.py is running.");
         }
     }
+
+    
 
     sendBtn.addEventListener('click', sendMessage);
 
@@ -312,38 +524,67 @@
     callBtn.addEventListener('click', () => callScreen.classList.add('visible'));
     hangupBtn.addEventListener('click', () => callScreen.classList.remove('visible'));
 
-    // ✨ ไมโครโฟน 
+    // ไมโครโฟน 
     const speakBtn = document.getElementById('speakBtn');
+    const callCaption = document.getElementById('callCaption');
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let isRecording = false;
+    let finalTranscript = '';
 
     if (SpeechRecognition) {
         const recognition = new SpeechRecognition();
-        recognition.lang = 'en-US'; // กำหนดให้เป็นภาษาอังกฤษ
-        recognition.continuous = false;
-        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+        recognition.continuous = true;      // ← เปลี่ยนเป็น true ไม่ให้หยุดเองตอนเงียบ
+        recognition.interimResults = true;  // ← โชว์คำที่พูดแบบ real-time ระหว่างพูด
 
+        // กดครั้งแรก = เริ่มอัด, กดอีกครั้ง = หยุดแล้วค่อยประมวลผล
         speakBtn.addEventListener('click', () => {
-            recognition.start();
-            speakBtn.innerText = '🟢';
+            if (!isRecording) {
+                finalTranscript = '';
+                recognition.start();
+                isRecording = true;
+                speakBtn.textContent = '⏹';
+                speakBtn.classList.add('recording');
+                callCaption.textContent = 'Listening... tap again to stop';
+            } else {
+                recognition.stop(); // ไปทำงานต่อที่ onend
+            }
         });
 
         recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            input.value = transcript;
-            sendMessage();
+            let interim = '';
+            for (let i = event.resultIndex; i < event.results.length; i++) {
+                const transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    finalTranscript += transcript + ' ';
+                } else {
+                    interim += transcript;
+                }
+            }
+            callCaption.textContent = (finalTranscript + interim).trim() || 'Listening...';
         };
 
         recognition.onend = () => {
-            speakBtn.innerText = ' 🕻 ';
+            isRecording = false;
+            speakBtn.textContent = ' 🕻 ';
+            speakBtn.classList.remove('recording');
+
+            const textToSend = finalTranscript.trim();
+            if (textToSend) {
+                input.value = textToSend;
+                sendMessage(); // ← ตอนนี้ค่อยส่งไปประมวลผลจริง หลังผู้ใช้กดหยุดแล้วเท่านั้น
+            }
         };
 
         recognition.onerror = (event) => {
-            speakBtn.innerText = ' 🕻 ';
+            isRecording = false;
+            speakBtn.textContent = ' 🕻 ';
+            speakBtn.classList.remove('recording');
             console.error("Speech Error:", event.error);
         };
-    }
+    } 
 
-    // ✨ จัดการ Response จาก backend ที่ส่งมาเป็น object JSON หรือ text
+    // จัดการ Response จาก backend ที่ส่งมาเป็น object JSON หรือ text
     function handleAIResponse(responseData) {
         let chatReply = "";
         let grammarTip = "NONE";
@@ -373,6 +614,8 @@
 
         // 1. แสดงข้อความคุยเฉพาะส่วนของ AI
         appendAIBubble(chatReply);
+        const callCaptionEl = document.getElementById('callCaption');
+        if (callCaptionEl) callCaptionEl.textContent = chatReply;
 
         // 2. อัปเดตการ์ด Grammar Check
         const grammarCard = document.getElementById('grammarCard');
@@ -407,24 +650,77 @@
         }
     }
 
-    // ✨ เล่นเสียง AI TTS (ส่งเฉพาะข้อความคุย ไม่ส่ง JSON)
+    // เล่นเสียง AI TTS (ส่งเฉพาะข้อความคุย ไม่ส่ง JSON)
+    let audioCtx;
+    let analyser;
+    const waveBars = document.querySelectorAll('#voiceWave span');
+
+    function getAudioContext() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        return audioCtx;
+    }
+
+    function animateWave(audioEl) {
+        if (!analyser) return;
+        const data = new Uint8Array(analyser.frequencyBinCount);
+        analyser.getByteFrequencyData(data);
+
+        waveBars.forEach((bar, i) => {
+            const value = data[i * 2] || 0;
+            const height = Math.max(6, (value / 255) * 34);
+            bar.style.height = height + 'px';
+        });
+
+        if (!audioEl.paused && !audioEl.ended) {
+            requestAnimationFrame(() => animateWave(audioEl));
+        } else {
+            waveBars.forEach(bar => bar.style.height = '6px');
+        }
+    }
+
     async function playAIVoice(textToRead) {
         try {
-            const response = await fetch('http://127.0.0.1:8001/api/tts', {
+            const response = await fetch('http://127.0.0.1:8000/api/tts', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text: textToRead })
             });
 
-            if (response.ok) {
-                const audioBlob = await response.blob();
-                const audioUrl = URL.createObjectURL(audioBlob);
-                const audio = new Audio(audioUrl);
-                audio.play();
-            }
+            if (!response.ok) return;
+
+            const audioBlob = await response.blob();
+            if (audioBlob.size === 0) return;
+
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+
+            // ต่อเสียงเข้ากับตัววิเคราะห์คลื่นเสียง
+            const ctx = getAudioContext();
+            if (ctx.state === 'suspended') await ctx.resume();
+            const source = ctx.createMediaElementSource(audio);
+            analyser = ctx.createAnalyser();
+            analyser.fftSize = 32;
+            source.connect(analyser);
+            analyser.connect(ctx.destination);
+
+            audio.onended = () => {
+                URL.revokeObjectURL(audioUrl);
+                waveBars.forEach(bar => bar.style.height = '6px');
+            };
+
+            await audio.play().catch(e => console.log("User interact required for audio or play interrupted:", e));
+            animateWave(audio);
+
         } catch (err) {
             console.error("Audio playback error:", err);
         }
+    }
+    loadHistory();
+    function clearHistory() {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
     }
 </script>
 
