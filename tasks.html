@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoBuddy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root{
+            --paper:#F6F3EE;
+            --paper-2:#FBF9F5;
+            --ink:#22262B;
+            --ink-soft:#5B6167;
+            --ink-faint:#9A9A8E;
+            --line:#DDD6C8;
+            --line-soft:#EAE5D9;
+            --denim:#B57C3B;
+            --denim-dark:#AA7237;
+            --denim-tint:#D4964B;
+            --denim-wash:#F3E6D4;
+            --sage:#7C8A6E;
+            --sage-tint:#EEF1E7;
+            --brick:#B23B3B;
+            --brick-tint:#F6E4E1;
+            --white:#FFFFFF;
+            --radius-sm:8px;
+            --radius-md:14px;
+            --radius-lg:20px;
+            --font-display:'Fraunces', Georgia, serif;
+            --font-body:'Inter', -apple-system, sans-serif;
+            --font-mono:'IBM Plex Mono', monospace;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100vh; width: 100vw; overflow: hidden; font-family: var(--font-body); background: var(--paper); color: var(--ink); }
+        
+        a{ color:inherit; text-decoration:none; }
+        button{ font-family:inherit; }
+        
+        .app-container-page2{
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            grid-template-rows: 100vh; 
+            width: 100vw;
+            background-color: var(--paper);
+            overflow: hidden;
+        }
+        
+        /* ---------- Sidebar ---------- */
+        .sidebar {
+            background-color: var(--white);
+            border-right: 1px solid var(--line);
+            padding: 24px;
+            height: 100vh;
+            overflow-y: auto;
+            background:var(--paper-2);
+            border-right:1px solid var(--line);
+            padding:26px 20px;
+            display:flex;
+            flex-direction:column;
+            }
+        .sidebar h2 { font-family: var(--font-display); margin-bottom: 8px; }
+        .sidebar p { font-size: 13px; color: var(--ink-soft); margin-bottom: 24px; }
+        .sidebar ul { list-style: none; }
+        .sidebar li { margin-bottom: 12px; }
+        .sidebar a { text-decoration: none; color: var(--ink); font-weight: 500; }
+            
+        
+        .brand{ padding:0 4px 26px; }
+        .brand-name{
+            font-family:var(--font-display);
+            font-size:20px;
+            font-weight:600;
+            letter-spacing:-0.01em;
+        }
+        .brand-tag{
+            font-family:var(--font-mono);
+            font-size:10.5px;
+            color:var(--ink-faint);
+            margin-top:3px;
+            letter-spacing:0.01em;
+        }
+        
+        .nav{ display:flex; flex-direction:column; gap:4px; }
+        .nav-item{
+            display:flex;
+            align-items:center;
+            gap:11px;
+            padding:10px 12px;
+            border-radius:var(--radius-sm);
+            font-size:13.5px;
+            font-weight:500;
+            color:var(--ink-soft);
+            transition:background 0.15s, color 0.15s;
+        }
+        .nav-item svg{ flex-shrink:0; opacity:0.8; }
+        .nav-item:hover{ background:var(--line-soft); color:var(--ink); }
+        .nav-item.active{
+            background:var(--denim-wash);
+            color:var(--denim-dark);
+            font-weight:600;
+        }
+        .nav-item.active svg{ opacity:1; }
+        
+        .sidebar-spacer{ flex:1; }
+        
+        .practice-btn{
+            width:100%;
+            padding:13px;
+            border:none;
+            border-radius:var(--radius-sm);
+            background:var(--ink);
+            color:var(--paper-2);
+            font-size:13.5px;
+            font-weight:600;
+            cursor:pointer;
+            transition:background 0.15s;
+            margin-bottom:14px;
+        }
+        .practice-btn:hover{ background:#33383F; }
+        
+        .sidebar-foot{
+            display:flex;
+            flex-direction:column;
+            gap:2px;
+            border-top:1px solid var(--line);
+            padding-top:14px;
+        }
+        .sidebar-foot a{
+            display:flex; align-items:center; gap:10px;
+            padding:8px 12px;
+            font-size:13px;
+            color:var(--ink-faint);
+            border-radius:var(--radius-sm);
+        }
+        .sidebar-foot a:hover{ background:var(--line-soft); color:var(--ink-soft); }
+
+
+      /* Main */
+        .main{ 
+            padding:36px 40px 40px;
+            height:100vh;
+            overflow-y:auto;
+         }
+        
+        .main-top{
+            display:flex;
+            align-items:flex-start;
+            justify-content:space-between;
+            margin-bottom:28px;
+            flex-wrap:wrap;
+            gap:14px;
+        }
+        .page-title{
+            font-family:var(--font-display);
+            font-size:34px;
+            font-weight:600;
+        }
+        .page-sub{
+            color:var(--denim-dark);
+            font-size:14.5px;
+            margin-top:6px;
+            font-weight:500;
+        }
+        .level-badge{
+            background:var(--sage-tint);
+            color:var(--sage);
+            font-family:var(--font-mono);
+            font-size:12.5px;
+            font-weight:500;
+            padding:9px 16px;
+            border-radius:24px;
+            display:flex;
+            align-items:center;
+            gap:6px;
+            white-space:nowrap;
+        }
+        
+        .content-grid{
+            display:grid;
+            grid-template-columns:1fr 300px;
+            gap:22px;
+            align-items:start;
+        }
+        
+        .card{
+            background:var(--white);
+            border:1px solid var(--line);
+            border-radius:var(--radius-lg);
+            padding:22px 24px;
+        }
+        
+        /* Missions card */
+        .card-head{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            margin-bottom:18px;
+        }
+        .card-head h2{
+            font-family:var(--font-display);
+            font-size:18px;
+            font-weight:600;
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+        .card-head .count{
+            font-size:12.5px;
+            color:var(--ink-faint);
+            font-family:var(--font-mono);
+        }
+        
+        .mission{
+            display:flex;
+            align-items:flex-start;
+            gap:14px;
+            padding:14px 4px;
+            border-bottom:1px solid var(--line-soft);
+        }
+        .mission:last-of-type{ border-bottom:none; }
+        
+        .checkbox{
+            width:20px; height:20px;
+            border-radius:6px;
+            border:1.5px solid var(--line);
+            flex-shrink:0;
+            margin-top:2px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            cursor:pointer;
+        }
+        .checkbox.checked{
+            background:var(--denim-tint);
+            border-color:var(--denim-tint);
+            color:var(--white);
+        }
+        
+        .mission-body{ flex:1; }
+        .mission-title{
+            font-size:14.5px;
+            font-weight:600;
+            color:var(--ink);
+        }
+        .mission.done .mission-title{
+            text-decoration:line-through;
+            color:var(--ink-faint);
+        }
+        .mission-note{
+            font-size:12.5px;
+            color:var(--ink-faint);
+            margin-top:3px;
+        }
+        
+        .mission-tags{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            flex-shrink:0;
+        }
+        .tag{
+            font-size:11px;
+            font-weight:600;
+            padding:5px 11px;
+            border-radius:20px;
+            background:var(--denim-wash);
+            color:var(--denim-dark);
+            white-space:nowrap;
+        }
+        .urgent-flag{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            gap:2px;
+            color:var(--brick);
+            font-size:9.5px;
+            font-weight:700;
+            letter-spacing:0.02em;
+        }
+        
+        .add-mission{
+            width:100%;
+            margin-top:14px;
+            padding:13px;
+            border:1.5px dashed var(--line);
+            border-radius:var(--radius-md);
+            background:transparent;
+            color:var(--ink-soft);
+            font-family:var(--font-body);
+            font-size:13.5px;
+            font-weight:600;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            cursor:pointer;
+            transition:border-color 0.15s, color 0.15s;
+        }
+        .add-mission:hover{ border-color:var(--denim-tint); color:var(--denim-dark); }
+        
+        /* Streak banner */
+        .streak{
+            margin-top:20px;
+            background:var(--ink);
+            border-radius:var(--radius-lg);
+            padding:24px 26px;
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:16px;
+        }
+        .streak-text h3{
+            color:var(--white);
+            font-family:var(--font-display);
+            font-size:18px;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+        .streak-text p{
+            color:#B7BBC0;
+            font-size:13px;
+            line-height:1.5;
+            max-width:380px;
+        }
+        .mascot{
+            width:54px; height:54px;
+            border-radius:50%;
+            background:var(--denim-tint);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:24px;
+            flex-shrink:0;
+            position:relative;
+        }
+        .mascot::after{
+            content:"🔥";
+            position:absolute;
+            bottom:-4px; right:-4px;
+            background:var(--paper-2);
+            border-radius:50%;
+            width:22px; height:22px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:12px;
+            border:2px solid var(--ink);
+        }
+        
+        /* Right column */
+        .side-col{ display:flex; flex-direction:column; gap:20px; }
+        .side-card h3{
+            font-family:var(--font-body);
+            font-size:12.5px;
+            font-weight:700;
+            letter-spacing:0.03em;
+            text-transform:uppercase;
+            color:var(--ink-soft);
+            display:flex;
+            align-items:center;
+            gap:7px;
+            margin-bottom:16px;
+        }
+        
+        .reminder{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            padding:10px 0;
+        }
+        .reminder + .reminder{ border-top:1px solid var(--line-soft); }
+        .date-chip{
+            width:38px; height:38px;
+            border-radius:10px;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-family:var(--font-mono);
+            font-weight:600;
+            font-size:14px;
+            flex-shrink:0;
+        }
+        .date-chip.urgent{ background:var(--brick); color:var(--white); }
+        .date-chip.normal{ background:var(--sage-tint); color:var(--sage); }
+        .reminder-title{ font-size:13.5px; font-weight:600; }
+        .reminder-sub{ font-size:11.5px; color:var(--ink-faint); margin-top:2px; }
+        .reminder-sub.urgent{ color:var(--brick); }
+        .chevron{ margin-left:auto; color:var(--ink-faint); }
+        
+        .flow-item{
+            display:flex;
+            gap:14px;
+            padding-bottom:18px;
+            position:relative;
+        }
+        .flow-item:last-child{ padding-bottom:0; }
+        .flow-dot-col{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+        }
+        .flow-dot{
+            width:8px; height:8px;
+            border-radius:50%;
+            background:var(--denim-tint);
+            margin-top:5px;
+            flex-shrink:0;
+        }
+        .flow-line{
+            width:1.5px;
+            flex:1;
+            background:var(--line);
+            margin-top:4px;
+        }
+        .flow-item.faint .flow-dot{ background:var(--ink-faint); }
+        .flow-label{
+            font-family:var(--font-mono);
+            font-size:10px;
+            letter-spacing:0.05em;
+            color:var(--ink-faint);
+            text-transform:uppercase;
+            margin-bottom:3px;
+        }
+        .flow-title{ font-size:13.5px; font-weight:600; }
+        .flow-sub{ font-size:11.5px; color:var(--ink-faint); margin-top:2px; }
+        .flow-item.faint .flow-title,
+        .flow-item.faint .flow-sub{ color:var(--ink-faint); font-weight:500; }
+        
+        /* Floating action button */
+        .fab{
+            position:fixed;
+            bottom:32px; right:32px;
+            width:52px; height:52px;
+            border-radius:50%;
+            background:var(--denim-tint);
+            color:var(--white);
+            border:none;
+            display:flex; align-items:center; justify-content:center;
+            cursor:pointer;
+            box-shadow:0 8px 20px rgba(181,124,59,0.35);
+            transition:background 0.15s, transform 0.1s;
+        }
+        .fab:hover{ background:var(--denim-dark); }
+        .fab:active{ transform:scale(0.94); }
+        
+        @media (max-width:900px){
+            .app{ grid-template-columns:1fr; }
+            .sidebar{ flex-direction:row; align-items:center; padding:16px 20px; }
+            .nav{ flex-direction:row; }
+            .content-grid{ grid-template-columns:1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container-page2">
+        <aside class="sidebar">
+        <h2>EchoBuddy</h2>
+        <p>your AI English Buddy ready to stay with you</p>
+            
+        <nav class="nav">
+            <a class="nav-item" href="index.html">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                Coach
+            </a>
+            <a class="nav-item" href="page2.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>
+                Insights
+            </a>
+            <a class="nav-item active" href="tasks.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                Tasks
+            </a>
+            <a class="nav-item" href="profile.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
+                Profile
+            </a>
+        </nav>
+            
+        <div class="sidebar-spacer"></div>
+            
+        <button class="practice-btn">Start Practice</button>
+        <div class="sidebar-foot">
+            <a href="#help">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 2-3 4"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            Help
+            </a>
+            <a href="#logout">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            Log out
+            </a>
+        </div>
+        </aside>
+
+        <main class="main">
+            <div class="main-top">
+                <div>
+                    <h1 class="page-title">Daily Missions</h1>
+                    <p class="page-sub">Ready for today's practice, You're doing great!</p>
+                </div>
+                <div class="level-badge">⚡ Level 1 · 420 XP to next goal</div>
+            </div>
+        
+            <div class="content-grid">
+                <div>
+                    <div class="card">
+                        <div class="card-head">
+                            <h2>✦ Today's Missions</h2>
+                            <span class="count" id="missionCount">0 OF 0 COMPLETE</span>
+                        </div>
+                        <div id="missionsList">
+                           
+                        </div>
+            
+                        <button class="add-mission">+ Add Custom Mission</button>
+                    </div>
+            
+                    <div class="streak">
+                        <div class="streak-text">
+                            <h3>You're on a 5-day streak!</h3>
+                            <p>Keep it up, and you'll unlock the 'Fluent Commuter' badge by Friday. Consistency is the key to natural speech!</p>
+                        </div>
+                        <div class="mascot">🦉</div>
+                    </div>
+                </div>
+            
+                <div class="side-col">
+                    <div class="card side-card">
+                        <h3>🔔 Reminders</h3>
+                        <div class="reminder">
+                            <div class="date-chip urgent">14</div>
+                            <div>
+                                <div class="reminder-title">Grammar Review</div>
+                                <div class="reminder-sub urgent">Overdue (2h)</div>
+                            </div>
+                        </div>
+                        <div class="reminder">
+                            <div class="date-chip normal">18</div>
+                            <div>
+                                <div class="reminder-title">Free Chat Session</div>
+                                <div class="reminder-sub">Starts in 3 hours</div>
+                            </div>
+                            <span class="chevron">›</span>
+                        </div>
+                    </div>
+            
+                    <div class="card side-card">
+                        <h3>🕐 Daily Flow</h3>
+                        <div class="flow-item">
+                            <div class="flow-dot-col">
+                                <div class="flow-dot"></div>
+                                <div class="flow-line"></div>
+                            </div>
+                            <div>
+                                <div class="flow-label">Morning</div>
+                                <div class="flow-title">Vocabulary Seeds</div>
+                                <div class="flow-sub">5-min flashcards while brushing teeth</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flow-item">
+                        <div class="flow-dot-col">
+                            <div class="flow-dot"></div>
+                            <div class="flow-line"></div>
+                        </div>
+                        <div>
+                            <div class="flow-label">Lunch Break</div>
+                            <div class="flow-title">EchoBuddy Dialogue</div>
+                            <div class="flow-sub">10-min active listening &amp; response</div>
+                        </div>
+                    </div>
+                    <div class="flow-item faint">
+                        <div class="flow-dot-col">
+                            <div class="flow-dot"></div>
+                        </div>
+                        <div>
+                            <div class="flow-label">Nightly Wrap</div>
+                            <div class="flow-title">Journaling</div>
+                            <div class="flow-sub">Voice memo about your day</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <button class="fab" aria-label="Add">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    </button>
+
+    <script>
+        async function loadTasks() {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/api/tasks');
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                renderTasks(data.tasks);
+            } catch (error) {
+                console.error('Error fetching tasks:', error);
+            }
+        }
+
+        function renderTasks(tasks) {
+            const container = document.getElementById('missionsList');
+            const countEl = document.getElementById('missionCount');
+
+            if (tasks.length === 0) {
+                container.innerHTML = `<p style="padding:16px 4px; color:var(--ink-faint); font-size:14px;">No missions yet — chat with Buddy about your plans and they'll show up here!</p>`;
+                countEl.textContent = '0 OF 0 COMPLETE';
+                return;
+            }
+
+            const completedCount = tasks.filter(t => t.is_completed).length;
+            countEl.textContent = `${completedCount} OF ${tasks.length} COMPLETE`;
+
+            container.innerHTML = tasks.map(task => `
+                <div class="mission ${task.is_completed ? 'done' : ''}" data-id="${task.id}">
+                    <div class="checkbox ${task.is_completed ? 'checked' : ''}">
+                        ${task.is_completed ? `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>` : ''}
+                    </div>
+                    <div class="mission-body">
+                        <div class="mission-title">${task.task_name}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // ผูก event ให้กดติ๊ก checkbox ได้
+            container.querySelectorAll('.checkbox').forEach(cb => {
+                cb.addEventListener('click', async (e) => {
+                    const missionEl = e.target.closest('.mission');
+                    const taskId = missionEl.dataset.id;
+                    const isCurrentlyDone = missionEl.classList.contains('done');
+                    await toggleTask(taskId, !isCurrentlyDone);
+                    loadTasks(); // โหลดใหม่เพื่ออัปเดตหน้าจอทันที
+                });
+            });
+        }
+
+        async function toggleTask(taskId, isCompleted) {
+            try {
+                await fetch(`http://127.0.0.1:8000/api/tasks/${taskId}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ is_completed: isCompleted })
+                });
+            } catch (error) {
+                console.error('Error updating task:', error);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', loadTasks);
+    </script>
+    
+</body>
+</html>

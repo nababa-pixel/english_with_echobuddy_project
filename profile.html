@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EchoBuddy — Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+      :root{
+        --paper:#F6F3EE;
+        --paper-2:#FBF9F5;
+        --ink:#22262B;
+        --ink-soft:#5B6167;
+        --ink-faint:#9A9A8E;
+        --line:#DDD6C8;
+        --line-soft:#EAE5D9;
+        --denim:#B57C3B;
+        --denim-dark:#AA7237;
+        --denim-tint:#D4964B;
+        --denim-wash:#F3E6D4;
+        --sage:#7C8A6E;
+        --sage-tint:#EEF1E7;
+        --brick:#B23B3B;
+        --brick-tint:#F6E4E1;
+        --white:#FFFFFF;
+        --plum:#8E4585;
+        --plum-tint:#F3E6F0;
+        --radius-sm:8px;
+        --radius-md:14px;
+        --radius-lg:20px;
+        --font-display:'Fraunces', Georgia, serif;
+        --font-body:'Inter', -apple-system, sans-serif;
+        --font-mono:'IBM Plex Mono', monospace;
+      }
+         
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100vh; width: 100vw; overflow: hidden; font-family: var(--font-body); background: var(--paper); color: var(--ink); }
+        
+        a{ color:inherit; text-decoration:none; }
+        button{ font-family:inherit; }
+        
+        .app-container-page2{
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            grid-template-rows: 100vh; 
+            width: 100vw;
+            background-color: var(--paper);
+            overflow: hidden;
+        }
+
+        /* ---------- Sidebar ---------- */
+        .sidebar {
+            background-color: var(--white);
+            border-right: 1px solid var(--line);
+            padding: 24px;
+            height: 100vh;
+            overflow-y: auto;
+            background:var(--paper-2);
+            border-right:1px solid var(--line);
+            padding:26px 20px;
+            display:flex;
+            flex-direction:column;
+            }
+        .sidebar h2 { font-family: var(--font-display); margin-bottom: 8px; }
+        .sidebar p { font-size: 13px; color: var(--ink-soft); margin-bottom: 24px; }
+        .sidebar ul { list-style: none; }
+        .sidebar li { margin-bottom: 12px; }
+        .sidebar a { text-decoration: none; color: var(--ink); font-weight: 500; }
+            
+        
+        .brand{ padding:0 4px 26px; }
+        .brand-name{
+            font-family:var(--font-display);
+            font-size:20px;
+            font-weight:600;
+            letter-spacing:-0.01em;
+        }
+        .brand-tag{
+            font-family:var(--font-mono);
+            font-size:10.5px;
+            color:var(--ink-faint);
+            margin-top:3px;
+            letter-spacing:0.01em;
+        }
+        
+        .nav{ display:flex; flex-direction:column; gap:4px; }
+        .nav-item{
+            display:flex;
+            align-items:center;
+            gap:11px;
+            padding:10px 12px;
+            border-radius:var(--radius-sm);
+            font-size:13.5px;
+            font-weight:500;
+            color:var(--ink-soft);
+            transition:background 0.15s, color 0.15s;
+        }
+        .nav-item svg{ flex-shrink:0; opacity:0.8; }
+        .nav-item:hover{ background:var(--line-soft); color:var(--ink); }
+        .nav-item.active{
+            background:var(--denim-wash);
+            color:var(--denim-dark);
+            font-weight:600;
+        }
+        .nav-item.active svg{ opacity:1; }
+        
+        .sidebar-spacer{ flex:1; }
+        
+        .practice-btn{
+            width:100%;
+            padding:13px;
+            border:none;
+            border-radius:var(--radius-sm);
+            background:var(--ink);
+            color:var(--paper-2);
+            font-size:13.5px;
+            font-weight:600;
+            cursor:pointer;
+            transition:background 0.15s;
+            margin-bottom:14px;
+        }
+        .practice-btn:hover{ background:#33383F; }
+        
+        .sidebar-foot{
+            display:flex;
+            flex-direction:column;
+            gap:2px;
+            border-top:1px solid var(--line);
+            padding-top:14px;
+        }
+        .sidebar-foot a{
+            display:flex; align-items:center; gap:10px;
+            padding:8px 12px;
+            font-size:13px;
+            color:var(--ink-faint);
+            border-radius:var(--radius-sm);
+        }
+        .sidebar-foot a:hover{ background:var(--line-soft); color:var(--ink-soft); }
+
+        /* Main */
+        .main{ 
+            padding:28px 30px;
+            height:100vh;
+            overflow-y:auto;
+        }
+        
+        .top-row{
+            display:grid;
+            grid-template-columns:1.6fr 1fr;
+            gap:20px;
+            margin-bottom:20px;
+        }
+        
+        .card{
+            background:var(--white);
+            border:1px solid var(--line);
+            border-radius:var(--radius-lg);
+            padding:22px 24px;
+        }
+        
+        /* Profile card */
+        .profile-card{
+            display:flex;
+            align-items:center;
+            gap:18px;
+        }
+        .avatar{
+            width:76px; height:76px;
+            border-radius:50%;
+            background:linear-gradient(135deg, var(--denim-tint), var(--denim-dark));
+            color:var(--white);
+            display:flex; align-items:center; justify-content:center;
+            font-family:var(--font-display);
+            font-size:26px;
+            font-weight:600;
+            flex-shrink:0;
+            border:3px solid var(--denim-wash);
+            position:relative;
+        }
+        .avatar::after{
+            content:"🎙️";
+            position:absolute;
+            bottom:-2px; right:-2px;
+            background:var(--denim-tint);
+            border-radius:50%;
+            width:24px; height:24px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:12px;
+            border:2px solid var(--white);
+        }
+        .profile-name-row{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+        .profile-name{
+            font-family:var(--font-display);
+            font-size:22px;
+            font-weight:600;
+        }
+        .level-pill{
+            background:var(--ink);
+            color:var(--white);
+            font-size:11px;
+            font-weight:600;
+            padding:5px 12px;
+            border-radius:20px;
+        }
+        .profile-quote{
+            font-style:italic;
+            color:var(--ink-soft);
+            font-size:13px;
+            margin-top:4px;
+        }
+        .profile-stats{
+            display:flex;
+            gap:18px;
+            margin-top:10px;
+        }
+        .profile-stat{
+            display:flex;
+            align-items:center;
+            gap:6px;
+            font-size:12.5px;
+            color:var(--ink-soft);
+            font-weight:500;
+        }
+        .profile-stat svg{ color:var(--denim-tint); }
+        
+        /* Milestone card */
+        .milestone-card{
+            background:var(--ink);
+            color:var(--white);
+            display:flex;
+            flex-direction:column;
+            justify-content:space-between;
+        }
+        .milestone-label{
+            font-size:12px;
+            color:#B7BBC0;
+            margin-bottom:4px;
+        }
+        .milestone-level{
+            font-family:var(--font-display);
+            font-size:26px;
+            font-weight:600;
+        }
+        .progress-track{
+            width:100%;
+            height:7px;
+            background:rgba(255,255,255,0.15);
+            border-radius:10px;
+            margin-top:18px;
+            overflow:hidden;
+        }
+        .progress-fill{
+            height:100%;
+            width:75%;
+            background:linear-gradient(90deg, var(--denim-tint), #E8B067);
+            border-radius:10px;
+        }
+        .progress-label{
+            font-family:var(--font-mono);
+            font-size:11px;
+            color:#B7BBC0;
+            margin-top:8px;
+        }
+        
+        /* Mid row */
+        .mid-row{
+            display:grid;
+            grid-template-columns:1fr 1fr 1fr;
+            gap:20px;
+            margin-bottom:20px;
+        }
+        .side-card h3{
+            font-family:var(--font-body);
+            font-size:14px;
+            font-weight:700;
+            display:flex;
+            align-items:center;
+            gap:8px;
+            margin-bottom:16px;
+        }
+        
+        .voice-option{
+            display:flex;
+            align-items:center;
+            gap:10px;
+            padding:10px 12px;
+            border-radius:var(--radius-md);
+            border:1.5px solid var(--line);
+            margin-bottom:8px;
+            cursor:pointer;
+        }
+        .voice-option.selected{
+            border-color:var(--denim-tint);
+            background:var(--denim-wash);
+        }
+        .voice-avatar{
+            width:30px; height:30px;
+            border-radius:50%;
+            background:var(--paper-2);
+            display:flex; align-items:center; justify-content:center;
+            font-size:14px;
+            flex-shrink:0;
+        }
+        .voice-name{ font-size:13px; font-weight:600; }
+        .voice-desc{ font-size:11px; color:var(--ink-faint); }
+        .voice-radio{
+            margin-left:auto;
+            width:16px; height:16px;
+            border-radius:50%;
+            border:2px solid var(--line);
+            flex-shrink:0;
+        }
+        .voice-option.selected .voice-radio{
+            border-color:var(--denim-tint);
+            background:var(--denim-tint);
+            box-shadow:inset 0 0 0 3px var(--white);
+        }
+        
+        .reminder-row{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            margin-bottom:16px;
+        }
+        .reminder-label{ font-size:13px; font-weight:600; }
+        .reminder-sub{ font-size:11px; color:var(--ink-faint); margin-top:2px; }
+        
+        .toggle{
+            width:38px; height:22px;
+            border-radius:20px;
+            background:var(--denim-tint);
+            position:relative;
+            flex-shrink:0;
+            cursor:pointer;
+        }
+        .toggle::after{
+            content:"";
+            position:absolute;
+            top:2px; right:2px;
+            width:18px; height:18px;
+            border-radius:50%;
+            background:var(--white);
+        }
+        
+        .select-field{
+            width:100%;
+            padding:9px 12px;
+            border:1.5px solid var(--line);
+            border-radius:var(--radius-sm);
+            font-family:var(--font-body);
+            font-size:12.5px;
+            color:var(--ink);
+            background:var(--paper-2);
+            cursor:pointer;
+        }
+        
+        .bars{
+            display:flex;
+            align-items:flex-end;
+            gap:8px;
+            height:70px;
+            margin:6px 0 10px;
+        }
+        .bar{
+            flex:1;
+            background:var(--line-soft);
+            border-radius:4px 4px 0 0;
+        }
+        .bar.peak{ background:var(--denim-tint); }
+        .bars-caption{
+            font-size:11px;
+            color:var(--ink-faint);
+            text-align:center;
+        }
+        
+        /* Vocabulary bank */
+        .vocab-card{ padding:24px 26px; }
+        .vocab-head{
+            display:flex;
+            align-items:flex-start;
+            justify-content:space-between;
+            margin-bottom:20px;
+            flex-wrap:wrap;
+            gap:14px;
+        }
+        .vocab-title{
+            font-family:var(--font-display);
+            font-size:20px;
+            font-weight:600;
+        }
+        .vocab-sub{
+            font-size:12.5px;
+            color:var(--ink-faint);
+            margin-top:4px;
+        }
+        .vocab-tools{ display:flex; gap:10px; position:relative; }
+        .filter-panel{
+            display:none;
+            position:absolute;
+            top:44px; right:0;
+            background:var(--white);
+            border:1px solid var(--line);
+            border-radius:var(--radius-md);
+            padding:14px;
+            width:180px;
+            box-shadow:0 8px 24px rgba(0,0,0,0.08);
+            z-index:50;
+        }
+        .filter-panel.open{ display:block; }
+        .filter-group{ margin-bottom:10px; }
+        .filter-group:last-child{ margin-bottom:0; }
+        .filter-group-title{ font-size:10.5px; font-weight:700; color:var(--ink-faint); text-transform:uppercase; margin-bottom:6px; }
+        .filter-group label{ display:flex; align-items:center; gap:6px; font-size:12.5px; padding:3px 0; cursor:pointer; }
+        .search-box{
+            display:flex;
+            align-items:center;
+            gap:8px;
+            padding:9px 14px;
+            border:1.5px solid var(--line);
+            border-radius:20px;
+            color:var(--ink-faint);
+            font-size:12.5px;
+            background:var(--paper-2);
+        }
+        .filter-btn{
+            width:36px; height:36px;
+            border-radius:50%;
+            border:1.5px solid var(--line);
+            background:var(--paper-2);
+            display:flex; align-items:center; justify-content:center;
+            color:var(--ink-soft);
+            cursor:pointer;
+        }
+        
+        .vocab-grid{
+            display:grid;
+            grid-template-columns:repeat(4, 1fr);
+            gap:16px;
+        }
+        .word-card{
+            border:1px solid var(--line);
+            border-radius:var(--radius-md);
+            padding:16px;
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+        }
+        .word-top{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+        }
+        .pos-tag{
+            font-size:10.5px;
+            font-weight:700;
+            padding:4px 10px;
+            border-radius:20px;
+        }
+        .pos-tag.noun{ background:var(--denim-wash); color:var(--denim-dark); }
+        .pos-tag.adj{ background:var(--plum-tint); color:var(--plum); }
+        .pos-tag.verb{ background:#FBEFC9; color:#9A7B1E; }
+        .word-en{
+            font-family:var(--font-display);
+            font-size:16.5px;
+            font-weight:600;
+        }
+        .word-phonetic{
+            font-family:var(--font-mono);
+            font-size:11px;
+            color:var(--denim-tint);
+            margin-top:-4px;
+        }
+        .word-def{
+            font-size:12px;
+            color:var(--ink-soft);
+            line-height:1.4;
+        }
+        .word-bottom{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+            margin-top:2px;
+        }
+        .status-tag{
+            font-size:10.5px;
+            font-weight:700;
+        }
+        .status-tag.mastered{ color:var(--sage); }
+        .status-tag.learning{ color:var(--denim-tint); }
+        .status-tag.new{ color:var(--ink-faint); }
+        
+        .add-word-card{
+            border:1.5px dashed var(--line);
+            border-radius:var(--radius-md);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            color:var(--ink-faint);
+            font-size:12.5px;
+            font-weight:600;
+            cursor:pointer;
+            transition:border-color 0.15s, color 0.15s;
+        }
+        .add-word-card:hover{ border-color:var(--denim-tint); color:var(--denim-dark); }
+        .add-circle{
+            width:34px; height:34px;
+            border-radius:50%;
+            background:var(--paper-2);
+            display:flex; align-items:center; justify-content:center;
+            color:var(--ink-soft);
+        }
+
+        .modal-overlay{
+            display:none;
+            position:fixed; inset:0;
+            background:rgba(34,38,43,0.45);
+            align-items:center; justify-content:center;
+            z-index:100;
+        }
+        .modal-box{
+            background:var(--white);
+            border-radius:var(--radius-lg);
+            padding:24px;
+            width:340px;
+            display:flex; flex-direction:column; gap:12px;
+        }
+        .modal-box h3{ font-family:var(--font-display); font-size:18px; }
+        .modal-box input, .modal-box select{
+            padding:10px 12px;
+            border:1px solid var(--line);
+            border-radius:var(--radius-sm);
+            font-size:13.5px;
+            font-family:inherit;
+        }
+        .modal-actions{ display:flex; gap:10px; margin-top:6px; }
+        .modal-actions button{
+            flex:1;
+            padding:10px;
+            border-radius:var(--radius-sm);
+            border:none;
+            font-size:13.5px;
+            font-weight:600;
+            cursor:pointer;
+        }
+        .modal-cancel{ background:var(--line-soft); color:var(--ink); }
+        .modal-submit{ background:var(--ink); color:var(--paper-2); }
+        
+        @media (max-width:900px){
+            .app{ grid-template-columns:1fr; }
+            .top-row, .mid-row{ grid-template-columns:1fr; }
+            .vocab-grid{ grid-template-columns:repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+<div class="app-container-page2">
+        <aside class="sidebar">
+        <h2>EchoBuddy</h2>
+        <p>your AI English Buddy ready to stay with you</p>
+            
+        <nav class="nav">
+            <a class="nav-item" href="index.html">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                Coach
+            </a>
+            <a class="nav-item" href="page2.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"></path><path d="M18 17V9"></path><path d="M13 17V5"></path><path d="M8 17v-3"></path></svg>
+                Insights
+            </a>
+            <a class="nav-item " href="tasks.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                Tasks
+            </a>
+            <a class="nav-item active" href="profile.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>
+                Profile
+            </a>
+        </nav>
+            
+        <div class="sidebar-spacer"></div>
+            
+        <button class="practice-btn">Start Practice</button>
+        <div class="sidebar-foot">
+            <a href="#help">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 2-3 4"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            Help
+            </a>
+            <a href="#logout">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+            Log out
+            </a>
+        </div>
+        </aside>
+
+        <main class="main">
+            <div class="top-row">
+                    <div class="card profile-card">
+                        <div class="avatar">U</div>
+                        <div>
+                            <div class="profile-name-row">
+                                <span class="profile-name">Ueser</span>
+                                <span class="level-pill">Beginner</span>
+                            </div>
+                            <div class="profile-quote">"Learning everyday to speak like a native!"</div>
+                            <div class="profile-stats">
+                                <div class="profile-stat">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                                    18h Total
+                                </div>
+                                <div class="profile-stat">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>
+                                    2 Day Streak
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                <div class="card milestone-card">
+                    <div class="milestone-label">Next Milestone</div>
+                    <div class="milestone-level">Level A1</div>
+                    <div>
+                        <div class="progress-track"><div class="progress-fill"></div></div>
+                        <div class="progress-label">750/1000 Practice XP</div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="mid-row">
+                <div class="card side-card">
+                    <h3>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--denim-tint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path></svg>
+                        AI Coach Voice
+                    </h3>
+                    <div class="voice-option selected">
+                        <div class="voice-avatar">🇬🇧</div>
+                        <div>
+                        <div class="voice-name">Puck (American)</div>
+                        <div class="voice-desc">Energetic &amp; Fast</div>
+                        </div>
+                        <div class="voice-radio"></div>
+                    </div>
+                    
+                </div>
+        
+                <div class="card side-card">
+                    <h3>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--denim-tint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                        Reminders
+                    </h3>
+                    <div class="reminder-row">
+                        <div>
+                            <div class="reminder-label">Daily Goal Alert</div>
+                            <div class="reminder-sub">Get notified at 09:00 AM</div>
+                        </div>
+                        <div class="toggle"></div>
+                    </div>
+                    <div>
+                        <div class="reminder-label" style="margin-bottom:8px;">Weekly Summary</div>
+                        <div class="select-field">Every Monday ▾</div>
+                    </div>
+                </div>
+        
+                <div class="card side-card">
+                    <h3>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--denim-tint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+                        Session Time
+                    </h3>
+                    <div class="bars">
+                        <div class="bar" style="height:35%;"></div>
+                        <div class="bar" style="height:20%;"></div>
+                        <div class="bar" style="height:50%;"></div>
+                        <div class="bar" style="height:30%;"></div>
+                        <div class="bar peak" style="height:85%;"></div>
+                        <div class="bar" style="height:40%;"></div>
+                    </div>
+                    <div class="bars-caption">Past 6 Days Activity</div>
+                </div>
+            </div>
+        
+            <div class="card vocab-card">
+                <div class="vocab-head">
+                    <div>
+                        <div class="vocab-title">Vocabulary Bank</div>
+                        <div class="vocab-sub">Review 124 words you've saved from conversations.</div>
+                    </div>
+                    <div class="vocab-tools">
+                         <div class="search-box">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                            <input type="text" id="searchInput" placeholder="Search words..." style="border:none; background:transparent; outline:none; font-size:12.5px; font-family:inherit; color:var(--ink); width:140px;">
+                        </div>
+                        <div class="filter-btn" id="filterBtn">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+                        </div>
+                        <div class="filter-panel" id="filterPanel">
+                            <div class="filter-group">
+                                <div class="filter-group-title">Part of Speech</div>
+                                <label><input type="checkbox" value="noun" class="pos-filter" checked> Noun</label>
+                                <label><input type="checkbox" value="verb" class="pos-filter" checked> Verb</label>
+                                <label><input type="checkbox" value="adjective" class="pos-filter" checked> Adjective</label>
+                                <label><input type="checkbox" value="adverb" class="pos-filter" checked> Adverb</label>
+                            </div>
+                            <div class="filter-group">
+                                <div class="filter-group-title">Status</div>
+                                <label><input type="checkbox" value="new" class="status-filter" checked> New</label>
+                                <label><input type="checkbox" value="learning" class="status-filter" checked> Learning</label>
+                                <label><input type="checkbox" value="mastered" class="status-filter" checked> Mastered</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="vocab-grid" id="vocabGrid">
+                    
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<div class="modal-overlay" id="addWordModal">
+    <div class="modal-box">
+        <h3>Add New Word</h3>
+        <form id="addWordForm" onsubmit="submitNewWord(event)" style="display:flex; flex-direction:column; gap:12px;">
+            <input type="text" id="newWord" placeholder="Word (e.g. Resilient)" required>
+            <input type="text" id="newMeaning" placeholder="Meaning (คำแปลไทย)" required>
+            <select id="newPos">
+                <option value="noun">Noun</option>
+                <option value="verb">Verb</option>
+                <option value="adjective">Adjective</option>
+                <option value="adverb">Adverb</option>
+            </select>
+            <input type="text" id="newPhonetic" placeholder="Phonetic (ไม่บังคับ เช่น /rɪˈzɪliənt/)">
+            <div class="modal-actions">
+                <button type="button" class="modal-cancel" onclick="closeAddWordModal()">Cancel</button>
+                <button type="submit" class="modal-submit">Add Word</button>
+            </div>
+        </form>
+    </div>
+</div>
+    
+<script>
+    const posClassMap = { noun: 'noun', verb: 'verb', adjective: 'adj', adverb: 'adj' };
+    let allWords = [];
+
+    async function loadVocabulary() {
+        try {
+            const response = await fetch('http://127.0.0.1:8000/api/vocabulary');
+            if (!response.ok) throw new Error('Network response was not ok');
+            const data = await response.json();
+            allWords = data.words;
+            document.querySelector('.vocab-sub').textContent =
+                `Review ${allWords.length} words you've saved from conversations.`;
+            applyFilters();
+        } catch (error) {
+            console.error('Error fetching vocabulary:', error);
+        }
+    }
+
+    function applyFilters() {
+        const query = document.getElementById('searchInput').value.trim().toLowerCase();
+        const posChecked = Array.from(document.querySelectorAll('.pos-filter:checked')).map(cb => cb.value);
+        const statusChecked = Array.from(document.querySelectorAll('.status-filter:checked')).map(cb => cb.value);
+
+        const filtered = allWords.filter(w => {
+            const pos = (w.part_of_speech || '').toLowerCase();
+            const status = (w.status || 'new').toLowerCase();
+
+            const matchesQuery = !query ||
+                w.word.toLowerCase().includes(query) ||
+                (w.meaning || '').toLowerCase().includes(query) ||
+                pos.includes(query);
+
+            const matchesPos = posChecked.includes(pos) || (!pos && posChecked.length > 0);
+            const matchesStatus = statusChecked.includes(status);
+
+            return matchesQuery && matchesPos && matchesStatus;
+        });
+
+        renderVocabulary(filtered);
+    }
+
+    function renderVocabulary(words) {
+        const grid = document.getElementById('vocabGrid');
+
+        const addCardHTML = `
+            <div class="add-word-card" id="addWordBtn">
+                <div class="add-circle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </div>
+                Add New Word
+            </div>`;
+
+        if (words.length === 0) {
+            grid.innerHTML = `<p style="grid-column:1/-1; color:var(--ink-faint); font-size:13px; padding:20px 0;">No words match your search or filter.</p>` + addCardHTML;
+            document.getElementById('addWordBtn').addEventListener('click', openAddWordModal);
+            return;
+        }
+
+        const cardsHTML = words.map(w => {
+            const posKey = (w.part_of_speech || '').toLowerCase();
+            const posClass = posClassMap[posKey] || 'noun';
+            const posLabel = w.part_of_speech
+                ? w.part_of_speech.charAt(0).toUpperCase() + w.part_of_speech.slice(1) + 's'
+                : 'Word';
+            const statusKey = (w.status || 'New').toLowerCase();
+
+            return `
+                <div class="word-card">
+                    <div class="word-top">
+                        <span class="pos-tag ${posClass}">${posLabel}</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink-faint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+                    </div>
+                    <div>
+                        <div class="word-en">${w.word}</div>
+                        <div class="word-phonetic">${w.phonetic || ''}</div>
+                    </div>
+                    <div class="word-def">${w.meaning}</div>
+                    <div class="word-bottom">
+                        <span class="status-tag ${statusKey}">${w.status || 'New'}</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--ink-faint)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M15 3h6v6"></path><path d="M10 14 21 3"></path></svg>
+                    </div>
+                </div>`;
+        }).join('');
+
+        grid.innerHTML = cardsHTML + addCardHTML;
+        document.getElementById('addWordBtn').addEventListener('click', openAddWordModal);
+    }
+
+    function openAddWordModal(){ document.getElementById('addWordModal').style.display = 'flex'; }
+    function closeAddWordModal(){
+        document.getElementById('addWordModal').style.display = 'none';
+        document.getElementById('addWordForm').reset();
+    }
+
+    async function submitNewWord(event) {
+        event.preventDefault();
+        const word = document.getElementById('newWord').value.trim();
+        const meaning = document.getElementById('newMeaning').value.trim();
+        const part_of_speech = document.getElementById('newPos').value;
+        const phonetic = document.getElementById('newPhonetic').value.trim();
+        if (!word || !meaning) return;
+
+        try {
+            await fetch('http://127.0.0.1:8000/api/vocabulary', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ word, meaning, part_of_speech, phonetic })
+            });
+            closeAddWordModal();
+            loadVocabulary();
+        } catch (error) {
+            console.error('Error adding word:', error);
+        }
+    }
+
+    // ---------- ส่วนค้นหา / filter ----------
+    document.getElementById('searchInput').addEventListener('input', applyFilters);
+    document.querySelectorAll('.pos-filter, .status-filter').forEach(cb => {
+        cb.addEventListener('change', applyFilters);
+    });
+    document.getElementById('filterBtn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('filterPanel').classList.toggle('open');
+    });
+    document.addEventListener('click', (e) => {
+        const panel = document.getElementById('filterPanel');
+        const btn = document.getElementById('filterBtn');
+        if (!panel.contains(e.target) && !btn.contains(e.target)) {
+            panel.classList.remove('open');
+        }
+    });
+
+    window.addEventListener('DOMContentLoaded', loadVocabulary);
+</script>
+
+</body>
+</html>
