@@ -61,7 +61,7 @@ def save_analysis_to_db(data):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    #insert ข้อมูลจากเว็บลงในตาราง
+    #ใส่ข้อมูลจากเว็บลงตาราง
     try:
         #บันทึกข้อมูลลงในตาราง Vocabularies
         for item in data.get("vocabularies", []):
@@ -70,7 +70,7 @@ def save_analysis_to_db(data):
                 (item.get("word"), item.get("meaning"), item.get("part_of_speech"), item.get("phonetic"), "New")
             )
 
-        #บันทึกข้อมูลจุดที่ผิดแกรมม่า (common_errors)
+        #บันทึกข้อมูลที่ผิดแกรมม่า 
         for item in data.get("errors",[]):
             cursor.execute(
                 "INSERT INTO common_errors (user_said, correct, explanation) VALUES (?, ?, ?)",
@@ -163,41 +163,12 @@ async def chat_endpoint(request: ChatRequest):
         
         print("📤 [SENT] ตอบกลับข้อความไปยังหน้าเว็บ:", user_reply)
 
-        #ส่งข้อมูลกลับไปยังหน้าเว็บ
+        #ส่งข้อมูลไปหน้าเว็บ
         return JSONResponse(content=data)
 
     except Exception as e:
         print("❌ ERROR เกิดขึ้นตรงนี้:", str(e))
         return JSONResponse({"status": "error", "message": str(e)}, status_code=500)
-
-@app.get("/api/insights")
-async def get_insights():
-    conn = sqlite3.connect(DB_PATH)  
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
-
-    # นับคำศัพท์ใหม่เดือนนี้
-    cursor.execute("""
-        SELECT COUNT(*) as count FROM Vocabularies
-        WHERE created_at >= date('now', 'start of month')
-    """)
-    vocab_count = cursor.fetchone()["count"]
-
-    # ดึง 10 ข้อผิดพลาดล่าสุด
-    cursor.execute("""
-        SELECT user_said, correct, explanation
-        FROM common_errors
-        ORDER BY created_at DESC LIMIT 10
-    """)
-    mistakes = [dict(row) for row in cursor.fetchall()]
-    
-
-    conn.close()
-
-    return JSONResponse(content={
-        "vocab_count": vocab_count,
-        "mistakes": mistakes
-    })
 
 # ---------- ดึงรายการ task ที่ยังไม่เสร็จ ----------
 @app.get("/api/tasks")
@@ -277,10 +248,10 @@ async def tts_endpoint(request: Request):
         return JSONResponse({"error": "No text provided."}, status_code=400)
 
     try:
-        # แปลงเสียงใน Background Thread เพื่อไม่ให้เซิร์ฟเวอร์ค้าง
+        #แปลงเสียงใน Background Thread เพื่อไม่ให้เซิร์ฟเวอร์ค้าง
         pcm_data = await asyncio.to_thread(_call_gemini_tts, text)
 
-        # ครอบไฟล์ PCM ดิบ ให้กลายเป็นไฟล์ .wav ที่เบราว์เซอร์เปิดเล่นได้ทันที
+        #ครอบไฟล์ PCM ดิบ ให้กลายเป็นไฟล์ .wav ที่เบราว์เซอร์เปิดเล่นได้ทันที
         wav_buffer = io.BytesIO()
         with wave.open(wav_buffer, "wb") as wf:
             wf.setnchannels(1)
@@ -302,14 +273,14 @@ async def get_insights():
     conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    # นับคำศัพท์ใหม่เดือนนี้
+    #นับคำศัพท์ใหม่เดือนนี้
     cursor.execute("""
         SELECT COUNT(*) as count FROM Vocabularies
         WHERE created_at >= date('now', 'start of month')
     """)
     vocab_count = cursor.fetchone()["count"]
 
-    # ดึง 10 ข้อผิดพลาดล่าสุด
+    #ดึง 10ข้อผิดพลาดล่าสุด
     cursor.execute("""
         SELECT user_said, correct_version, explanation
         FROM common_errors
